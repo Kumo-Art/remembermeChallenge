@@ -207,11 +207,11 @@ async function loadShows() {
       setState("empty", "🫥 The API sent zero shows.");
       return;
     }
-     filterShows(allShows, searchInput.value);
+    const matches = filterShows(allShows, searchInput.value);
 
-      renderList(matches);
-      setState("Here are some shows for you based on your search"+ searchInput.value + matches.length);
-      // incomplete come back and refine
+    renderList(matches);
+    setState("Here are some shows for you based on your search" + searchInput.value + matches.length);
+    // incomplete come back and refine
 
 
     // ✏️ TASK 1c · 🎨 SHOW: instead of drawing ALL shows, draw the ones that
@@ -264,7 +264,7 @@ function filterShows(shows, query) {
 
 searchInput.addEventListener("input", function () {
   // ✏️ TASK 1b · 💾 SAVE: save searchInput.value under the key "binge-search"
-  localStorage.setItem("binge-search",searchInput.value);
+  localStorage.setItem("binge-search", searchInput.value);
 
   const matches = filterShows(allShows, searchInput.value);
   renderList(matches);
@@ -339,6 +339,7 @@ listEl.addEventListener("click", function (event) {
   favBtn.textContent = starText(id);
 
   // ✏️ TASK 2b · call updateFavCount() here, so the number changes on every ☆ click
+  updateFavCount();
 });
 
 
@@ -351,7 +352,7 @@ listEl.addEventListener("click", function (event) {
 // 1b · 💾 SAVE: go to the search listener in STEP 10
 // 1c · 🎨 SHOW: go to loadShows in STEP 8
 // ✅ CHECK: search "drama", reload → the box says drama AND only dramas show
-localStorage.getItem("binge-search") || "";
+const searched = localStorage.getItem("binge-search") || "";
 
 searchInput.value = searched;
 
@@ -364,7 +365,10 @@ searchInput.value = searched;
 //      and call it once here, so the number shows on page load.
 // 2b · go to the ☆ click listener in PART 2
 // ✅ CHECK: star 2 shows → "⭐ 2 favorites". Reload → still 2.
-
+function updateFavCount() {
+  favCountEl.textContent = "⭐ " + favorites.length + " favorites";
+  localStorage.setItem("binge-favorites", JSON.stringify(favorites));
+}
 
 
 // =====================================================================
@@ -375,7 +379,12 @@ searchInput.value = searched;
 //      ⚠️ Use removeItem, NOT localStorage.clear()! Why? (hint: Pizza Tracker 🍕)
 //   2. location.reload();   ← reloads the page like a brand-new visit
 // ✅ CHECK: star shows, search, go light → 🧹 → everything is back to new
-
+     forgetBtn.addEventListener("click", function () {
+  localStorage.removeItem("binge-theme");
+  localStorage.removeItem("binge-favorites");
+  localStorage.removeItem("binge-search");
+  loadShows();
+});
 
 
 // =====================================================================
